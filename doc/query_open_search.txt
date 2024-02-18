@@ -1,0 +1,119 @@
+## 1.indexを作成する
+PUT /test-products
+
+## 2.マッピングを作成
+PUT /test-products/_mapping
+{
+    "properties" : {
+        "productCode" : {"type" : "keyword"},
+        "productName" : {"type" : "keyword"},
+        "brand" : {"type" : "keyword"},
+        "gender" : {"type" : "keyword"},
+        "category" : {"type" : "keyword"},
+        "price" : {"type" : "integer"},
+        "color" : {"type" : "keyword"},
+        "size" : {"type" : "keyword"}
+    }
+}
+
+## 3.データ登録
+POST /test-products/_bulk
+{ "index" : {"_id" : "A001" } }
+{"productCode": "A001","productName": "無地スキニーパンツ","brand": "ブランドA","gender": "メンズ","category": "パンツ","price": "2000","color": "ホワイト","size": "S"}
+{ "index" : {"_id" : "A002" } }
+{"productCode": "A002","productName": "無地スキニーパンツ","brand": "ブランドA","gender": "メンズ","category": "パンツ","price": "2000","color": "ホワイト","size": "M"}
+{ "index" : {"_id" : "A003" } }
+{"productCode": "A003","productName": "無地スキニーパンツ","brand": "ブランドA","gender": "メンズ","category": "パンツ","price": "2000","color": "ホワイト","size": "L"}
+{ "index" : {"_id" : "A004" } }
+{"productCode": "A004","productName": "無地スキニーパンツ","brand": "ブランドA","gender": "メンズ","category": "パンツ","price": "2000","color": "ブラック","size": "S"}
+{ "index" : {"_id" : "A005" } }
+{"productCode": "A005","productName": "無地スキニーパンツ","brand": "ブランドA","gender": "メンズ","category": "パンツ","price": "2000","color": "ブラック","size": "M"}
+{ "index" : {"_id" : "A006" } }
+{"productCode": "A006","productName": "無地スキニーパンツ","brand": "ブランドA","gender": "メンズ","category": "パンツ","price": "2000","color": "ブラック","size": "L"}
+{ "index" : {"_id" : "B001" } }
+{"productCode": "B001","productName": "デニムパンツ","brand": "ブランドB","gender": "レディース","category": "パンツ","price": "2500","color": "ブラウン","size": "S"}
+{ "index" : {"_id" : "B002" } }
+{"productCode": "B002","productName": "デニムパンツ","brand": "ブランドB","gender": "レディース","category": "パンツ","price": "2500","color": "ブラウン","size": "M"}
+{ "index" : {"_id" : "B003" } }
+{"productCode": "B003","productName": "デニムパンツ","brand": "ブランドB","gender": "レディース","category": "パンツ","price": "2500","color": "ブラウン","size": "L"}
+{ "index" : {"_id" : "B004" } }
+{"productCode": "B004","productName": "デニムパンツ","brand": "ブランドB","gender": "レディース","category": "パンツ","price": "2500","color": "ホワイト","size": "S"}
+{ "index" : {"_id" : "B005" } }
+{"productCode": "B005","productName": "デニムパンツ","brand": "ブランドB","gender": "レディース","category": "パンツ","price": "2500","color": "ホワイト","size": "M"}
+{ "index" : {"_id" : "B006" } }
+{"productCode": "B006","productName": "デニムパンツ","brand": "ブランドB","gender": "レディース","category": "パンツ","price": "2500","color": "ホワイト","size": "L"}
+{ "index" : {"_id" : "C001" } }
+{"productCode": "C001","productName": "長袖Tシャツ","brand": "ブランドC","gender": "メンズ","category": "Tシャツ","price": "1500","color": "ホワイト","size": "S"}
+{ "index" : {"_id" : "C002" } }
+{"productCode": "C002","productName": "長袖Tシャツ","brand": "ブランドC","gender": "メンズ","category": "Tシャツ","price": "1500","color": "ホワイト","size": "M"}
+{ "index" : {"_id" : "C003" } }
+{"productCode": "C003","productName": "長袖Tシャツ","brand": "ブランドC","gender": "メンズ","category": "Tシャツ","price": "1500","color": "ホワイト","size": "L"}
+{ "index" : {"_id" : "C004" } }
+{"productCode": "C004","productName": "長袖Tシャツ","brand": "ブランドC","gender": "キッズ","category": "Tシャツ","price": "1000","color": "グレー","size": "S"}
+{ "index" : {"_id" : "C005" } }
+{"productCode": "C005","productName": "長袖Tシャツ","brand": "ブランドC","gender": "キッズ","category": "Tシャツ","price": "1000","color": "グレー","size": "M"}
+{ "index" : {"_id" : "C006" } }
+{"productCode": "C006","productName": "長袖Tシャツ","brand": "ブランドC","gender": "キッズ","category": "Tシャツ","price": "1000","color": "グレー","size": "L"}
+
+## 4-1 全検索
+
+GET /test-products/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+## 4-2 全検索（条件付き）
+
+GET /test-products/_search
+{
+  "from" : 0,
+  "size": 50,
+  "track_total_hits" : true,
+  "sort" : [
+    {"productName" : {"order" : "asc"}}
+  ],
+  "query" : {
+    "bool" : { 
+      "must" : [
+        {
+          "terms" : {
+            "brand" : ["ブランドA", "ブランドB", "ブランドC"]
+          }
+        },
+        {
+          "terms" : {
+            "gender" : ["メンズ"]
+          }
+        },
+        {
+          "terms" : {
+            "category" : ["Tシャツ"]
+          }
+        },
+        {
+          "terms" : {
+            "color" : ["ホワイト"]
+          }
+        },
+        {
+          "terms" : {
+            "size" : ["L"]
+          }
+        },
+        {
+          "range" : {
+            "price" : {
+              "gte" : 0,
+              "lt" : 3000
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+
